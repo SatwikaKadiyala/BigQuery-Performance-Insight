@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright 2024 Google LLC
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.google.cloud.tools</groupId>
+    <artifactId>bigquery-antipattern-recognition-tool</artifactId>
+    <version>1.0.0.1</version>
+    <packaging>pom</packaging>
+
+    <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <google.cloud.jib.version>3.3.2</google.cloud.jib.version>
+        <spotless-maven-plugin.version>2.1.0</spotless-maven-plugin.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <version>3.1.2</version> 
+         </dependency>
+     </dependencies>
+            
+
+    <modules>
+        <module>bigquery-antipattern-recognition</module>
+    </modules>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>${google.cloud.jib.version}</version>
+            </plugin>
+
+        <plugin>
+            <groupId>com.diffplug.spotless</groupId>
+            <artifactId>spotless-maven-plugin</artifactId>
+            <version>${spotless-maven-plugin.version}</version>
+            <configuration>
+                <formats>
+                    <!-- Avoid trailing whitespace and require ending newline. -->
+                    <format>
+                        <includes>
+                            <include>bigquery-antipattern-recognition/src/main/java/**/*.java</include>
+                            <include>bigquery-antipattern-recognition/src/test/java/**/*.java</include>
+                        </includes>
+                        <trimTrailingWhitespace/>
+                        <endWithNewline/>
+                    </format>
+                </formats>
+                <java>
+                    <googleJavaFormat>
+                        <version>1.7</version>
+                        <style>GOOGLE</style>
+                    </googleJavaFormat>
+                    <licenseHeader>
+                        <file>JAVA_LICENSE_HEADER</file>
+                    </licenseHeader>
+                </java>
+            </configuration>
+            <!-- Bind to verify. -->
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>check</goal>
+                    </goals>
+                    <phase>package</phase>
+                </execution>
+            </executions>
+        </plugin>
+
+        </plugins>
+    </build>
+
+</project>
